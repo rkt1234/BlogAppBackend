@@ -43,6 +43,11 @@ def login():
     password = data['password']
     return ob.loginUser(conn, email, password)
 
+# Fetch all posts(to show on users feed)
+@app.route('/fetch', methods=['GET'])
+def getBlogs():
+    return ob.fetchBlogs(conn)
+
 # Create post API
 @app.route('/create', methods=['POST'])
 def create():
@@ -61,6 +66,17 @@ def delete():
     data = request.get_json()
     postId = data['postId']
     return ob.deletePost(conn, postId)
+
+# Update API
+@app.route('/update',methods=['POST'])
+def update():
+    data = request.get_json()
+    postId = data['postId']
+    title = data['title']
+    description = data['description']
+    imageUrl = data['imageUrl']
+    return ob.updatePost(conn, postId, description, title, imageUrl)
+
 if __name__ == "__main__" :
     app.run(debug=True)
 
