@@ -1,47 +1,24 @@
 import random
-from flask import Flask, request, session
-import requests
-import psycopg2
-from database_operations import DatabaseOperations
+from flask import Flask, request
+from urls import loginUrl, registerUrl
+from models.database_operations import DatabaseOperations
+from utils.connection import connectToDB
 
-print("Connecting to database........")
-USERNAME = "trail_owner"
-PASSWORD = "KC3FnYcO5xBp"
-
-try:
-# Establish the connection
-    conn = psycopg2.connect(
-    dbname="sample",
-    user=USERNAME,
-    password=PASSWORD,
-    host="ep-blue-scene-a5e7rn2t.us-east-2.aws.neon.tech",
-    port="5432",
-    sslmode="require"
-    )
-    print("Connection succeeded")
-
-except Exception as error:
-    print(f"Error connecting to the database: {error}")
+# setting the connection with database
+conn=connectToDB()
 
 app = Flask(__name__)
 ob=DatabaseOperations()
 
 # Registration API
-@app.route('/register', methods=['POST'])
+@app.route('/app/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    email = data['email']
-    userName = data['username']
-    password = data['password']
-    return ob.registerUser(conn, email, userName, password)
+    return registerUrl(conn)
 
 # Login API
-@app.route('/login',methods=['POST'])
+@app.route('/app/login',methods=['POST'])
 def login():
-    data = request.get_json()
-    email = data['email']
-    password = data['password']
-    return ob.loginUser(conn, email, password)
+    return loginUrl(conn)
 
 # Fetch all posts(to show on users feed)
 @app.route('/fetch', methods=['GET'])
@@ -61,7 +38,7 @@ def create():
     return ob.createPost(conn, postId, title, description, userId, createdTime, imageUrl)
 
 # Delete post API
-@app.route('/delete', methods=['POST'])
+@app.route('/delete', methods=['DELETE'])
 def delete():
     data = request.get_json()
     postId = data['postId']
