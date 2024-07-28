@@ -4,7 +4,7 @@ import jwt
 
 class UserServices:
 
-    def loginUser(self,conn):
+    def loginUser(self,conn, secretKey):
         data = request.get_json()
         email = data['email']
         password = data['password']
@@ -12,7 +12,6 @@ class UserServices:
         cur.execute('select email FROM users WHERE email = %s', (email,))
         emailRecord=cur.fetchone()
         cur.execute('select password FROM users WHERE password = %s', (password,))
-        conn.commit()
         passwordRecord=cur.fetchone()
         print(type(emailRecord))
         print(type(passwordRecord))
@@ -28,17 +27,20 @@ class UserServices:
         else:
             cur.execute('select userName FROM users WHERE email = %s', (email,))
             userName=cur.fetchone()
-            accessToken=jwt.encode({
+            type(userName[0])
+            payload = {
                 'email': emailRecord[0],
                 'password': passwordRecord[0],
-                'username': userName
+                'username': userName[0],
+                'expAt': 30
                 }
-                ,"e9b1e93a09f445b38a88b795e2a79dbd254f79a4e7163a3e2a4ea9a9ed2b3e29"
-                )
+            print(payload)
+            accessToken=jwt.encode(payload, secretKey, algorithm="HS256")
+            conn.commit()
 
-            return jsonify({'accessToken' : accessToken}) 
+            return accessToken
         
-    def registerUser(self,conn, email, userName, password):
+    def registerUser(self,conn, secretKey):
             data = request.get_json()
             email = data['email']
             userName = data['username']

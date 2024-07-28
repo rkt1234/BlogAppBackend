@@ -4,20 +4,20 @@ from services.users import UserServices
 userServices=UserServices()
 postsServices=PostsServices()
 
-def loginUrl(conn):
-    return userServices.loginUser(conn)
+def loginUrl(conn,secretKey):
+    return userServices.loginUser(conn,secretKey)
 
-def registerUrl(conn):
-    return userServices.registerUser(conn)
+def registerUrl(conn,secretKey):
+    return userServices.registerUser(conn,secretKey)
 
-def fetchBlogsUrl(conn):
-    return postsServices.fetchBlogs(conn)
+def fetchBlogsUrl(conn,secretKey):
+    return postsServices.fetchBlogs(conn,secretKey)
 
-def createBlogUrl(conn):
-    return postsServices.createBlog(conn)
+def createBlogUrl(conn,secretKey):
+    return postsServices.createBlog(conn,secretKey)
 
-def updateBlogUrl(conn):
-    return postsServices.updateBlog(conn)
+def updateBlogUrl(conn,secretKey):
+    return postsServices.updateBlog(conn,secretKey)
 
-def deleteBlogUrl(conn):
-    return postsServices.deleteBlog(conn)
+def deleteBlogUrl(conn,secretKey):
+    return postsServices.deleteBlog(conn,secretKey)
