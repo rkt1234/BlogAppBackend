@@ -1,14 +1,14 @@
-import random
-from flask import Flask, request
-from urls import loginUrl, registerUrl
-from models.database_operations import DatabaseOperations
+from flask import Flask
+from urls import createBlogUrl, deleteBlogUrl, fetchBlogsUrl, loginUrl, registerUrl, updateBlogUrl
 from utils.connection import connectToDB
 
 # setting the connection with database
 conn=connectToDB()
 
+#initialising flask app
 app = Flask(__name__)
-ob=DatabaseOperations()
+
+
 
 # Registration API
 @app.route('/app/register', methods=['POST'])
@@ -21,38 +21,24 @@ def login():
     return loginUrl(conn)
 
 # Fetch all posts(to show on users feed)
-@app.route('/fetch', methods=['GET'])
+@app.route('/app/fetch', methods=['GET'])
 def getBlogs():
-    return ob.fetchBlogs(conn)
+    return fetchBlogsUrl(conn)
 
 # Create post API
-@app.route('/create', methods=['POST'])
+@app.route('/app/create', methods=['POST'])
 def create():
-    data = request.get_json()
-    postId = postId=random.randint(10000, 99999)
-    title = data['title']
-    description = data['description']
-    userId = data['userId']
-    createdTime = data['createdTime']
-    imageUrl = data['imageUrl']
-    return ob.createPost(conn, postId, title, description, userId, createdTime, imageUrl)
+    return createBlogUrl(conn)
 
 # Delete post API
-@app.route('/delete', methods=['DELETE'])
+@app.route('/app/delete', methods=['DELETE'])
 def delete():
-    data = request.get_json()
-    postId = data['postId']
-    return ob.deletePost(conn, postId)
+    return deleteBlogUrl(conn)
 
 # Update API
-@app.route('/update',methods=['POST'])
+@app.route('/app/update',methods=['POST'])
 def update():
-    data = request.get_json()
-    postId = data['postId']
-    title = data['title']
-    description = data['description']
-    imageUrl = data['imageUrl']
-    return ob.updatePost(conn, postId, description, title, imageUrl)
+    return updateBlogUrl(conn)
 
 if __name__ == "__main__" :
     app.run(debug=True)
