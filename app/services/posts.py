@@ -37,9 +37,9 @@ class PostsServices :
                 cur = conn.cursor()
                 cur.execute('insert into posts values(%s,%s,%s,%s,%s,%s)', (postId, userId, title, description, createdTime, imageUrl))
                 conn.commit()
-                return "Post added"
+                return "Post added", 200
             else :
-                 return "could not add post"
+                 return response['message']
         
         def updateBlog(self,conn, secretKey):
             data = request.get_json()
@@ -56,7 +56,7 @@ class PostsServices :
                 conn.commit()
                 return "Post updated"
             else :
-                 return "could not update post"
+                return response['message']
         
         def deleteBlog(self,conn, secretKey):
             data=request.get_json()

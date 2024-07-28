@@ -1,3 +1,4 @@
+import hashlib
 import random
 from flask import jsonify, request
 import jwt
@@ -8,6 +9,7 @@ class UserServices:
         data = request.get_json()
         email = data['email']
         password = data['password']
+        password = hashlib.sha256(password.encode()).hexdigest()
         cur = conn.cursor()
         cur.execute('select email FROM users WHERE email = %s', (email,))
         emailRecord=cur.fetchone()
@@ -45,6 +47,8 @@ class UserServices:
             email = data['email']
             userName = data['username']
             password = data['password']
+            password = hashlib.sha256(password.encode()).hexdigest()
+            print(password)
             cur = conn.cursor()
             cur.execute('select email FROM users WHERE email = %s', (email,))
             emailRecord=cur.fetchone()
@@ -52,7 +56,7 @@ class UserServices:
             userNameRecord=cur.fetchone()
             if emailRecord==None and userNameRecord==None:
                 uid = random.randint(10000, 99999)
-                cur.execute('INSERT INTO users VALUES (%s,%s,%s,%s)', (userName, uid, email, password))
+                cur.execute('INSERT INTO users (email, password, username) VALUES (%s, %s, %s)', (email, password, userName))
                 conn.commit()
                 return "Registration completed"
         
