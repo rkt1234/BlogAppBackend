@@ -7,7 +7,7 @@ class PostsServices :
         def fetchBlogs(self,conn):
             print("inside fetch")
             cur = conn.cursor()
-            cur.execute('SELECT * FROM posts')
+            cur.execute('select * FROM posts')
             record=cur.fetchall()
             print(len(record))
             conn.commit()
@@ -23,7 +23,7 @@ class PostsServices :
             imageUrl = data['imageUrl']
             print("inside creation")
             cur = conn.cursor()
-            cur.execute('INSERT INTO posts values(%s,%s,%s,%s,%s,%s)', (postId, userId, title, description, createdTime, imageUrl))
+            cur.execute('insert into posts values(%s,%s,%s,%s,%s,%s)', (postId, userId, title, description, createdTime, imageUrl))
             conn.commit()
             return "Post added"
         
@@ -35,7 +35,7 @@ class PostsServices :
             imageUrl = data['imageUrl']
             print("inside update")
             cur = conn.cursor()
-            cur.execute('UPDATE posts SET description = %s, title = %s, imageUrl = %s, where postId=%s', (description, title, imageUrl, postId))
+            cur.execute('update posts set description = %s, title = %s, imageUrl = %s, where postId=%s', (description, title, imageUrl, postId))
             conn.commit()
             return "Post updated"
         
@@ -44,6 +44,6 @@ class PostsServices :
             postId=data['postId']
             print("inside delete")
             cur = conn.cursor()
-            cur.execute('DELETE FROM posts WHERE postId = %s', (postId,))
+            cur.execute('delete from posts where postId = %s', (postId,))
             conn.commit()
             return "Post deleted"
