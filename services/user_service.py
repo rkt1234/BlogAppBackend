@@ -1,6 +1,6 @@
 import datetime
 import hashlib
-from flask import jsonify, request
+from flask import jsonify, make_response, request
 import jwt
 from models.users import Users
 
@@ -19,17 +19,19 @@ def userService(app, db):
             existing_user_username = Users.query.filter_by(username=userName).first()
 
             if existing_user_email:
-                return jsonify({'message': 'Email already exists'}), 400
+                return make_response(jsonify({'message': 'Email already exists'}), 400)
+
         
             if existing_user_username:
-                return jsonify({'message': 'Username already exists'}), 400
+                return make_response(jsonify({'message': 'Username already exists'}), 400)
+
         
             new_user = Users(email=email, password=password, username=userName)
             db.session.add(new_user)
             db.session.commit()
             db.session.close()
+            return make_response(jsonify({'message': 'User registered successfully'}), 200)
 
-            return jsonify({'message': 'User registered successfully'}), 200
     
     @app.route('/user/login', methods=['POST'])
     def login():
@@ -39,13 +41,12 @@ def userService(app, db):
             password = data['password']
             password = hashlib.sha256(password.encode()).hexdigest()
             user = Users.query.filter_by(email=email).first()
-            expiry_minutes = 60
-            expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=expiry_minutes)
             if user and user.password:
                 payload = {
-                'email': user.email,
+                'uid': user.userid,
                 'username': user.username,
-                'exp': expiry_time
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+                'iat': datetime.datetime.utcnow()
                 }
                 print(payload)
                 accessToken=jwt.encode(payload, app.config['SECRET_KEY'], algorithm="HS256")

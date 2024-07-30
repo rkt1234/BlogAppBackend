@@ -1,4 +1,4 @@
-from flask import request
+from flask import jsonify, make_response, request
 
 from models.posts import Post
 from utils.authorize_user import isAuthorized
@@ -23,8 +23,8 @@ def postService(app, db) :
                   blog = Post(title=title, description=description, userid=userId, createdtime=createdTime, imageurl=imageUrl)
                   db.session.add(blog)
                   db.session.commit()
-                  return {'message': 'Blog created successfully'}, 200
-            return response[0]['message'], 401
+                  return make_response(jsonify({'message': 'Blog created successfully'}), 200)
+            return make_response(jsonify({'message':response[0]['message'] }), 401)
     
     @app.route('/post/delete', methods=['DELETE'])
     def deleteBlog():
@@ -35,8 +35,8 @@ def postService(app, db) :
           if response[1]==200:
                 db.session.query(Post).filter(Post.postid == postId).delete()
                 db.session.commit()
-                return {'message': 'Post deleted successfully'}, 200
-          return response[0]['message'], 401
+                return make_response(jsonify({'message': 'Blog deleted successfully'}), 200)
+          return make_response(jsonify({'message':response[0]['message'] }), 401)
     
     @app.route('/post/update', methods=['POST'])
     def updateBlog():
@@ -56,8 +56,8 @@ def postService(app, db) :
                 blog.createdtime = createdTime
                 blog.imageurl = imageUrl
                 db.session.commit()
-                return {'message': 'Blog updated successfully'}, 200
-          return response[0]['message'], 401 
+                return make_response(jsonify({'message': 'Blog updated successfully'}), 200)
+          return make_response(jsonify({'message':response[0]['message'] }), 401)
     
     @app.route('/post/fetch', methods=["GET"])
     def fetchBlogs():
@@ -66,7 +66,7 @@ def postService(app, db) :
           print(len(blogs))
           for blog in blogs:
                 print(blog.title)
-          return "All posts"
+          return make_response(jsonify({'message':'All posts' }), 401)
 
                 
             
