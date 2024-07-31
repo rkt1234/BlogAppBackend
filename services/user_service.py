@@ -3,6 +3,7 @@ import hashlib
 from flask import jsonify, make_response, request
 import jwt
 from models.users import Users
+from utils.authorize_user import isAuthorized
 
 def userService(app, db):
 
@@ -54,6 +55,36 @@ def userService(app, db):
         
             else:
                 return jsonify({'message': 'Invalid email or password'}), 401
+            
+    @app.route('/user/update', methods=['POST'])
+    def update():
+        with app.app_context():
+            data = request.get_json()
+            accessToken = request.headers.get('Authorization')
+            userId = data['userId']
+            email = data['email']
+            imageUrl = data['imageUrl']
+            userName = data['userName']            
+            response=isAuthorized(app,accessToken)
+            if response[1]==200:
+                existing_user_email = Users.query.filter_by(email=email).first()
+                existing_user_username = Users.query.filter_by(username=userName).first()
+
+                if existing_user_email:
+                    return make_response(jsonify({'message': 'Email already exists'}), 400)
+                
+                elif existing_user_username:
+                    return make_response(jsonify({'message': 'Username already exists'}), 400)
+                
+                else:
+                    user = Users.query.filter_by(userid=userId).first()
+                    print(user)
+                    user.email = email
+                    user.username = userName
+                    user.imageUrl = imageUrl
+                    db.session.commit()
+                    return make_response(jsonify({'message': 'User updated successfully'}), 200)
+            return make_response(jsonify({'message':response[0]['message'] }), 401)
             
 
 
