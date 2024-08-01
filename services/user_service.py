@@ -8,7 +8,7 @@ from utils.authorize_user import isAuthorized
 def userService(app, db):
 
     @app.route('/', methods=['GET'])
-    def print():
+    def home():
         return "Hello"
 
     @app.route('/user/register', methods=['POST'])
@@ -48,6 +48,8 @@ def userService(app, db):
                 data = request.get_json()
                 email = data['email']
                 password = data['password']
+                print(email)
+                print(password)
                 password = hashlib.sha256(password.encode()).hexdigest()
                 user = Users.query.filter_by(email=email).first()
                 if user and user.password:
@@ -63,7 +65,8 @@ def userService(app, db):
             
                 else:
                     return jsonify({'message': 'Invalid email or password'}), 401
-            except:
+            except  Exception as e :
+                print(f"An error occurred: {e}")
                 return make_response(jsonify({'message': 'Could not login'}), 500)
                 
     @app.route('/user/update', methods=['POST'])
