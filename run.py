@@ -1,6 +1,6 @@
 from app import createApp
 
-flaskApp = createApp()
+app = createApp()
 
 if __name__ == "__main__":
-    flaskApp.run()
+    app.run()
