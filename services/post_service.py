@@ -19,11 +19,14 @@ def postService(app, db) :
             response=isAuthorized(app,accessToken)
             db.create_all()
             if response[1]==200:
-                  print("blog ban rha h")
-                  blog = Post(title=title, description=description, userid=userId, createdtime=createdTime, imageurl=imageUrl)
-                  db.session.add(blog)
-                  db.session.commit()
-                  return make_response(jsonify({'message': 'Blog created successfully'}), 200)
+                  try:
+                        print("blog ban rha h")
+                        blog = Post(title=title, description=description, userid=userId, createdtime=createdTime, imageurl=imageUrl)
+                        db.session.add(blog)
+                        db.session.commit()
+                        return make_response(jsonify({'message': 'Blog created successfully'}), 200)
+                  except:
+                        return make_response(jsonify({'message': 'Could not create'}), 500)  
             return make_response(jsonify({'message':response[0]['message'] }), 401)
     
     @app.route('/post/delete', methods=['DELETE'])
@@ -33,9 +36,12 @@ def postService(app, db) :
           postId=data['postId']
           response=isAuthorized(app,accessToken)
           if response[1]==200:
-                db.session.query(Post).filter(Post.postid == postId).delete()
-                db.session.commit()
-                return make_response(jsonify({'message': 'Blog deleted successfully'}), 200)
+                try :
+                  db.session.query(Post).filter(Post.postid == postId).delete()
+                  db.session.commit()
+                  return make_response(jsonify({'message': 'Blog deleted successfully'}), 200)
+                except :
+                      return make_response(jsonify({'message': 'Could not delete'}), 500)  
           return make_response(jsonify({'message':response[0]['message'] }), 401)
     
     @app.route('/post/update', methods=['POST'])
@@ -50,23 +56,29 @@ def postService(app, db) :
           imageUrl = data['imageUrl']
           response=isAuthorized(app,accessToken)
           if response[1]==200:
-                blog = Post.query.filter_by(postid=postId).first()
-                blog.title = title
-                blog.description = description
-                blog.createdtime = createdTime
-                blog.imageurl = imageUrl
-                db.session.commit()
-                return make_response(jsonify({'message': 'Blog updated successfully'}), 200)
+                try:
+                  blog = Post.query.filter_by(postid=postId).first()
+                  blog.title = title
+                  blog.description = description
+                  blog.createdtime = createdTime
+                  blog.imageurl = imageUrl
+                  db.session.commit()
+                  return make_response(jsonify({'message': 'Blog updated successfully'}), 200)
+                except:
+                   return make_response(jsonify({'message': 'Could not update'}), 500)   
           return make_response(jsonify({'message':response[0]['message'] }), 401)
     
     @app.route('/post/fetch', methods=["GET"])
     def fetchBlogs():
-          blogs = Post.query.all()
-          print(type(blogs))
-          print(len(blogs))
-          for blog in blogs:
-                print(blog.title)
-          return make_response(jsonify({'message':'All posts' }), 401)
+          try:
+            blogs = Post.query.all()
+            print(type(blogs))
+            print(len(blogs))
+            for blog in blogs:
+                  print(blog.title)
+            return make_response(jsonify({'message':'All posts' }), 401)
+          except:
+                return make_response(jsonify({'message': 'Could not fetch'}), 500)  
 
                 
             
