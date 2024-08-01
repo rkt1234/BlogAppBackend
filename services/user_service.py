@@ -67,7 +67,7 @@ def userService(app, db):
                     return jsonify({'message': 'Invalid email or password'}), 401
             except  Exception as e :
                 print(f"An error occurred: {e}")
-                return make_response(jsonify({'message': 'Could not login'}), 500)
+                return make_response(jsonify({'message': e}), 500)
                 
     @app.route('/user/update', methods=['POST'])
     def update():
