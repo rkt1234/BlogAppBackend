@@ -1,8 +1,5 @@
 import jwt
 
-from models.users import Users
-
-
 def isAuthorized(app,accessToken):
     
     try :
