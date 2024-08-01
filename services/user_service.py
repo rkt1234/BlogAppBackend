@@ -7,6 +7,10 @@ from utils.authorize_user import isAuthorized
 
 def userService(app, db):
 
+    @app.route('/', methods=['GET'])
+    def print():
+        return "Hello"
+
     @app.route('/user/register', methods=['POST'])
     def signup():
         with app.app_context():
