@@ -69,23 +69,26 @@ def userService(app, db):
             if response[1]==200:
                 existing_user_email = Users.query.filter_by(email=email).first()
                 existing_user_username = Users.query.filter_by(username=userName).first()
-
-                if existing_user_email:
+                
+                if existing_user_email and existing_user_email.userid != userId:
                     return make_response(jsonify({'message': 'Email already exists'}), 400)
                 
-                elif existing_user_username:
+                if existing_user_username and existing_user_username.userid != userId:
                     return make_response(jsonify({'message': 'Username already exists'}), 400)
                 
-                else:
-                    user = Users.query.filter_by(userid=userId).first()
-                    print(user)
-                    user.email = email
-                    user.username = userName
-                    user.imageUrl = imageUrl
-                    db.session.commit()
-                    return make_response(jsonify({'message': 'User updated successfully'}), 200)
+                # Update user details
+                user = Users.query.filter_by(userid=userId).first()
+                if not user:
+                    return make_response(jsonify({'message': 'User not found'}), 404)
+                
+                user.email = email
+                user.username = userName
+                user.imageUrl = imageUrl
+                db.session.commit()
+                
+                return make_response(jsonify({'message': 'User updated successfully'}), 200)
             return make_response(jsonify({'message':response[0]['message'] }), 401)
-            
+                    
 
 
     
