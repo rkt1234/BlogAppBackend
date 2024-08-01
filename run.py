@@ -1,4 +1,4 @@
-from src.app import createApp
+from app import createApp
 
 flaskApp = createApp()
 
