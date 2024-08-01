@@ -3,7 +3,6 @@ from flask import jsonify, make_response, request
 from models.posts import Post
 from utils.authorize_user import isAuthorized
 
-
 def postService(app, db) :
 
     @app.route('/post/create', methods=['POST'])
