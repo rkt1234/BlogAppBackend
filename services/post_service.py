@@ -69,13 +69,22 @@ def postService(app, db) :
     
     @app.route('/post/fetch', methods=["GET"])
     def fetchBlogs():
+          posts=[]
           try:
             blogs = Post.query.all()
             print(type(blogs))
             print(len(blogs))
             for blog in blogs:
-                  print(blog.title)
-            return make_response(jsonify({'message':'All posts' }), 401)
+                  postData = {'postid': blog.postid,
+                'title': blog.title,
+                'description': blog.description,
+                'userid': blog.userid,
+                'createdtime': blog.createdtime,
+                'imageurl': blog.imageurl}
+                  posts.append(postData)
+                  print(blog)
+            print(len(posts))
+            return make_response(jsonify({'message': posts }), 401)
           except:
                 return make_response(jsonify({'message': 'Could not fetch'}), 500)  
 
