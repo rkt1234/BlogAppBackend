@@ -70,9 +70,11 @@ def postService(app, db) :
     @app.route('/post/fetch', methods=["GET"])
     def fetchBlogs():
           print("here")
+          print("inside update")
+          uId = request.headers.get('uid')
           posts=[]
           try:
-            blogs = Post.query.filter(Post.userid != 2).all()
+            blogs = Post.query.filter(Post.userid != int(uId)).all()
             print(type(blogs))
             print(len(blogs))
             for blog in blogs:
