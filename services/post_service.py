@@ -69,9 +69,10 @@ def postService(app, db) :
     
     @app.route('/post/fetch', methods=["GET"])
     def fetchBlogs():
+          print("here")
           posts=[]
           try:
-            blogs = Post.query.all()
+            blogs = Post.query.filter(Post.userid != 2).all()
             print(type(blogs))
             print(len(blogs))
             for blog in blogs:
@@ -84,7 +85,7 @@ def postService(app, db) :
                   posts.append(postData)
                   print(blog)
             print(len(posts))
-            return make_response(jsonify({'message': posts }), 401)
+            return make_response(jsonify({'message': posts }), 200)
           except:
                 return make_response(jsonify({'message': 'Could not fetch'}), 500)  
 
