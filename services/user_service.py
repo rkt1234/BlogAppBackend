@@ -32,7 +32,7 @@ def userService(app, db):
                     return make_response(jsonify({'message': 'Username already exists'}), 400)
 
             
-                new_user = Users(email=email, password=password, username=userName)
+                new_user = Users(email=email, password=password, username=userName, imageurl="")
                 db.session.add(new_user)
                 db.session.commit()
                 db.session.close()
@@ -56,6 +56,7 @@ def userService(app, db):
                     payload = {
                     'uid': user.userid,
                     'username': user.username,
+                    'imageurl': user.imageurl,
                     'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
                     'iat': datetime.datetime.utcnow()
                     }

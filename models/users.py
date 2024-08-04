@@ -7,3 +7,4 @@ class Users(db.Model):
     email=db.Column(db.Text, nullable=False)
     password=db.Column(db.Text, nullable=False)
     username=db.Column(db.Text, nullable=False)
+    imageurl=db.Column(db.Text, nullable=False)
