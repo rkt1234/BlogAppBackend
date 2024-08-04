@@ -78,7 +78,7 @@ def postService(app, db) :
           uId = request.headers.get('uid')
           posts=[]
           try:
-            blogs = Post.query.filter(Post.userid == 2).all()
+            blogs = Post.query.filter(Post.userid != uId).all()
 
             print(type(blogs))
             print(len(blogs))
