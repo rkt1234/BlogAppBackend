@@ -11,4 +11,6 @@ class Post(db.Model):
     userid = db.Column(db.Integer, ForeignKey('users.userid', ondelete='CASCADE'), nullable=False)
     createdtime = db.Column(db.Text, nullable=False)
     imageurl = db.Column(db.String(255), nullable=False)
+    authorname = db.Column(db.String(255), nullable=False)
+    authorimageurl = db.Column(db.String(255), nullable=False)
     

@@ -15,13 +15,17 @@ def postService(app, db) :
             userId = data['userId']
             createdTime = data['createdTime']
             imageUrl = data['imageUrl']
+            authorName = data['authorName']
+            authorImageUrl = data['authorImageUrl']
             response=isAuthorized(app,accessToken)
             db.create_all()
             if response[1]==200:
                   try:
                         print("blog ban rha h")
-                        blog = Post(title=title, description=description, userid=userId, createdtime=createdTime, imageurl=imageUrl)
+                        print(response[0]['message'])
+                        blog = Post(title=title, description=description, userid=userId, createdtime=createdTime, imageurl=imageUrl, authorname=authorName, authorimageurl= authorImageUrl)
                         db.session.add(blog)
+                        print("add ho rha h ")
                         db.session.commit()
                         return make_response(jsonify({'message': 'Blog created successfully'}), 200)
                   except:
@@ -83,7 +87,10 @@ def postService(app, db) :
                 'description': blog.description,
                 'userid': blog.userid,
                 'createdtime': blog.createdtime,
-                'imageurl': blog.imageurl}
+                'imageurl': blog.imageurl,
+                'authorname': blog.authorname,
+                'authorimageurl': blog.authorimageurl
+                }
                   posts.append(postData)
                   print(blog)
             print(len(posts))
