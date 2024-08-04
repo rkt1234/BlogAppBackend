@@ -78,7 +78,8 @@ def postService(app, db) :
           uId = request.headers.get('uid')
           posts=[]
           try:
-            blogs = Post.query.filter(Post.userid != int(uId)).all()
+            blogs = Post.query.filter(Post.userid == 2).all()
+
             print(type(blogs))
             print(len(blogs))
             for blog in blogs:
@@ -97,7 +98,34 @@ def postService(app, db) :
             return make_response(jsonify({'message': posts }), 200)
           except:
                 return make_response(jsonify({'message': 'Could not fetch'}), 500)  
-
+      
+    @app.route('/post/fetch/userpost', methods=["GET"])
+    def fetchUserBlogs():
+         print("inside fetch user post")
+         uId = request.headers.get('uid')
+         print(uId)
+         posts=[]
+         try:
+              blogs = Post.query.filter(Post.userid == int(uId)).all()
+              print(len(blogs))
+              for blog in blogs:
+                   postData = {'postid': blog.postid,
+                'title': blog.title,
+                'description': blog.description,
+                'userid': blog.userid,
+                'createdtime': blog.createdtime,
+                'imageurl': blog.imageurl,
+                'authorname': blog.authorname,
+                'authorimageurl': blog.authorimageurl
+                }
+                   posts.append(postData)
+                   print(blog)
+                   print(posts)
+                   print(len(posts))
+              return make_response(jsonify({'message': posts }), 200)
+    
+         except:
+            return make_response(jsonify({'message': 'Could not fetch'}), 500)
                 
             
          
