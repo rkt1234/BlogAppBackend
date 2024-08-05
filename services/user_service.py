@@ -20,6 +20,7 @@ def userService(app, db):
                 password = data['password']
                 password = hashlib.sha256(password.encode()).hexdigest()
                 userName = data['userName']
+                imageUrl=data['imageUrl']
                 db.create_all()
                 existing_user_email = Users.query.filter_by(email=email).first()
                 existing_user_username = Users.query.filter_by(username=userName).first()
@@ -32,7 +33,7 @@ def userService(app, db):
                     return make_response(jsonify({'message': 'Username already exists'}), 400)
 
             
-                new_user = Users(email=email, password=password, username=userName, imageurl="")
+                new_user = Users(email=email, password=password, username=userName, imageurl=imageUrl)
                 db.session.add(new_user)
                 db.session.commit()
                 db.session.close()
