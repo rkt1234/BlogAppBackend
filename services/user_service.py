@@ -53,7 +53,7 @@ def userService(app, db):
                 print(password)
                 password = hashlib.sha256(password.encode()).hexdigest()
                 user = Users.query.filter_by(email=email).first()
-                if user and user.password:
+                if user and user.password==password:
                     payload = {
                     'uid': user.userid,
                     'username': user.username,
