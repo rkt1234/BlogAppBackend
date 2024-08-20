@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey
-from app import db
+from models.dbinit import db
 
 
 class Post(db.Model):
