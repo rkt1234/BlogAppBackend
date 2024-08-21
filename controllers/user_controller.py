@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import create_access_token
 import jwt
 from models.users import Users
-
+import bcrypt
 from models.dbinit import db
 
 user_bp = Blueprint('user', __name__)
@@ -15,31 +15,38 @@ def home():
 
 @user_bp.route('/register', methods=['POST'])
 def signup():
-    
     try:
         data = request.get_json()
         email = data['email']
         password = data['password']
-        password = hashlib.sha256(password.encode()).hexdigest()
         userName = data['userName']
-        imageUrl=data['imageUrl']
+        imageUrl = data['imageUrl']
+
+        # Check if the email or username already exists
         existing_user_email = Users.query.filter_by(email=email).first()
         existing_user_username = Users.query.filter_by(username=userName).first()
 
         if existing_user_email:
             return make_response(jsonify({'message': 'Email already exists'}), 400)
 
-    
         if existing_user_username:
             return make_response(jsonify({'message': 'Username already exists'}), 400)
 
-    
-        new_user = Users(email=email, password=password, username=userName, imageurl=imageUrl)
+        # Hash the password with bcrypt
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+        # Create a new user instance
+        new_user = Users(email=email, password=hashed_password, username=userName, imageurl=imageUrl)
+        
+        # Add the new user to the database
         db.session.add(new_user)
         db.session.commit()
         db.session.close()
+        
         return make_response(jsonify({'message': 'User registered successfully'}), 200)
-    except:
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
         return make_response(jsonify({'message': 'Could not register'}), 500)
 
 
