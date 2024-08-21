@@ -7,6 +7,7 @@ from models.posts import Post
 from models.users import Users 
 from controllers.user_controller import user_bp
 from controllers.post_controller import post_bp
+from flask_migrate import Migrate
 # Initialize the Flask application
 app = Flask(__name__)
 
@@ -17,7 +18,7 @@ app.config.from_object(configs.Config)
 db.init_app(app)
 with app.app_context():
     db.create_all()
-# migrate = Migrate(app, db)
+migrate = Migrate(app, db)
 
 # Initialize the JWT manager
 jwt = JWTManager(app)
