@@ -4,7 +4,6 @@ from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import create_access_token
 import jwt
 from models.users import Users
-import bcrypt
 from models.dbinit import db
 
 user_bp = Blueprint('user', __name__)
@@ -21,7 +20,7 @@ def signup():
         password = data['password']
         userName = data['userName']
         imageUrl = data['imageUrl']
-
+        password = hashlib.sha256(password.encode()).hexdigest()
         # Check if the email or username already exists
         existing_user_email = Users.query.filter_by(email=email).first()
         existing_user_username = Users.query.filter_by(username=userName).first()
@@ -32,11 +31,9 @@ def signup():
         if existing_user_username:
             return make_response(jsonify({'message': 'Username already exists'}), 400)
 
-        # Hash the password with bcrypt
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         # Create a new user instance
-        new_user = Users(email=email, password=hashed_password, username=userName, imageurl=imageUrl)
+        new_user = Users(email=email, password=password, username=userName, imageurl=imageUrl)
         
         # Add the new user to the database
         db.session.add(new_user)
