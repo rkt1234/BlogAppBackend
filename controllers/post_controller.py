@@ -80,8 +80,6 @@ def fetchBlogs():
                   'authorimageurl': blog.authorimageurl
                   }
                   posts.append(postData)
-                  print(blog)
-            print(len(posts))
             return make_response(jsonify({'message': posts }), 200)
       except:
             return make_response(jsonify({'message': 'Could not fetch'}), 500)  
@@ -89,11 +87,9 @@ def fetchBlogs():
 @post_bp.route('/fetch/userpost', methods=["GET"])
 def fetchUserBlogs():
       uId = request.headers.get('uid')
-      print(uId)
       posts=[]
       try:
             blogs = Post.query.filter(Post.userid == int(uId)).all()
-            print(len(blogs))
             for blog in blogs:
                   postData = {'postid': blog.postid,
             'title': blog.title,
