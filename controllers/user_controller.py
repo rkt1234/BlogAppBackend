@@ -46,7 +46,6 @@ def signup():
         return make_response(jsonify({'message': 'User registered successfully'}), 200)
 
     except Exception as e:
-        print(f"An error occurred: {e}")
         return make_response(jsonify({'message': 'Could not register'}), 500)
 
 
@@ -76,7 +75,6 @@ def login():
         else:
             return jsonify({'message': 'Invalid email or password'}), 401
     except  Exception as e :
-        print(f"An error occurred: {e}")
         return make_response(jsonify({'message': e}), 500)
        
                     

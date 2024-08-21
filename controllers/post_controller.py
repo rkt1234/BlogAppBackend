@@ -21,10 +21,8 @@ def createBlog():
       authorImageUrl = data['authorImageUrl']
       
       try:
-            print("blog ban rha h")
             blog = Post(title=title, description=description, userid=userId, createdtime=createdTime, imageurl=imageUrl, authorname=authorName, authorimageurl= authorImageUrl)
             db.session.add(blog)
-            print("add ho rha h ")
             db.session.commit()
             return make_response(jsonify({'message': 'Blog created successfully'}), 200)
       except:
@@ -47,7 +45,6 @@ def deleteBlog():
 @post_bp.route('/update', methods=['POST'])
 @jwt_required()
 def updateBlog():
-      print("inside update")
       data = request.get_json()
       postId=data['postId']
       title = data['title']
@@ -68,8 +65,6 @@ def updateBlog():
 
 @post_bp.route('/fetch', methods=["GET"])
 def fetchBlogs():
-      print("here")
-      print("inside update")
       uId = request.headers.get('uid')
       posts=[]
       try:
@@ -110,9 +105,6 @@ def fetchUserBlogs():
             'authorimageurl': blog.authorimageurl
             }
                   posts.append(postData)
-                  print(blog)
-                  print(posts)
-                  print(len(posts))
             return make_response(jsonify({'message': posts }), 200)
 
       except:
