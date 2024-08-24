@@ -8,10 +8,11 @@ from models.users import Users
 from controllers.user_controller import user_bp
 from controllers.post_controller import post_bp
 from flask_migrate import Migrate
+
 # Initialize the Flask application
 app = Flask(__name__)
 
-# Load the configuration settings
+# Load the configuration settings, including pool_pre_ping
 app.config.from_object(configs.Config)
 
 # Initialize the database and migration tools
