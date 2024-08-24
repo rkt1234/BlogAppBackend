@@ -43,6 +43,7 @@ def signup():
         return make_response(jsonify({'message': 'User registered successfully'}), 200)
 
     except Exception as e:
+        print(e)
         return make_response(jsonify({'message': 'Could not register'}), 500)
 
 

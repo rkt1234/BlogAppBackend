@@ -17,7 +17,9 @@ app.config.from_object(configs.Config)
 # Initialize the database and migration tools
 db.init_app(app)
 with app.app_context():
+    print("starting")
     db.create_all()
+    print("ending")
 migrate = Migrate(app, db)
 
 # Initialize the JWT manager
